@@ -259,7 +259,7 @@ class Session {
 		// is there a message stored in the session?
 		if (isset($_SESSION['message'])) {
 			// add it as an attribute and erase the stored version
-			$this->message = htmlentities($_SESSION['message']);
+			$this->message = $_SESSION['message'];
 			unset($_SESSION['message']);
 		} else {
 			$this->message = "";

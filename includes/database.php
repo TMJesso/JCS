@@ -2,7 +2,7 @@
 class Factory extends Common {
     private $db;
     
-    private function __construct() {
+    function __construct() {
         $this->db_open();
     }
     
@@ -40,8 +40,29 @@ class Factory extends Common {
     }
     
     private function confirm_query($results) {
-        if (!$result) {
+        if (!$results) {
             die("Database Query Failed! ERROR: " . $this->db->error . " (" . $this->db->errno . ")");
+        }
+    }
+    
+    public function prevent_injection($string) {
+        $escaped_string = $this->db->real_escape_string($string);
+        //$escaped_string = mysqli_real_escape_string($this->db, $string);
+        return $escaped_string;
+    }
+    
+    public function insert_id() {
+        // get the last id inserted over the current db connection
+        return $this->db->insert_id;
+        //return mysqli_insert_id($this->db);
+    }
+    
+    public function fetch_array($result_set) {
+        if ($result_set) {
+            return $result_set->fetch_array(MYSQLI_ASSOC);
+            //return mysqli_fetch_array($result_set);
+        } else {
+            return false;
         }
     }
 }

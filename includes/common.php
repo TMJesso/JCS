@@ -1,5 +1,5 @@
 <?php
-//require_once LIB_PATH . 'database.php';
+require_once LIB_PATH . 'database.php';
 
 /** This is the Top class upon which all other database class are instantiated
  * 
@@ -112,6 +112,54 @@ class Common {
 		$base->query($sql);
 		return ($base->affected_rows() == 1) ? true : false;
 		
+	}
+	
+	/**
+	 * if the result was found it will return the value
+	 *
+	 * otherwise it will return false;
+	 *
+	 * @param object $result
+	 * @return object|boolean
+	 */
+	protected static function confirm_single_result($result) {
+	    if ($result) {
+	        return array_shift($result);
+	    } else {
+	        return false;
+	    }
+	}
+	
+	/**
+	 * if the results were found it will return the values
+	 *
+	 * otherwise it will return false
+	 *
+	 * @param object $results
+	 * @return object|false
+	 */
+	protected static function confirm_all_results($results) {
+	    if ($results) {
+	        return $results;
+	    } else {
+	        return false;
+	    }
+	}
+	
+	/**
+	 * validate the string and if it is empty return false
+	 *
+	 * otherwise return the string back to the calling function
+	 *
+	 * @param string $id
+	 * @return false|string
+	 */
+	protected static function validate_string($id) {
+	    if (empty($id)) {
+	        return false;
+	    } else {
+	        return $id;
+	    }
 	}
 	
 }
