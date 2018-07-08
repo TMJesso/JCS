@@ -89,7 +89,7 @@ if (isset($_POST["submit_save"])) {
 				</label>
 				
 				<div class="text-center">
-					<input type="submit" name="submit_choose" id="submit_choose" value="Go">
+					<input type="submit" name="submit_choose" id="submit_choose" class="button" value="Go">
 				</div>
 			</form>		
 		</div>
