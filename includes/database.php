@@ -65,6 +65,12 @@ class Factory extends Common {
             return false;
         }
     }
+    
+    public function affected_rows() {
+        return $this->db->affected_rows;
+        //return mysqli_affected_rows($this->db);
+    }
+    
 }
 $base = new Factory();
 

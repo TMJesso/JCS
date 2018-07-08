@@ -1,5 +1,6 @@
 <?php
     global $session;
+    $menu_type = Menu_Type::get_by_type("JCS", 9);
 ?>
 <!-- Header -->
 <!DOCTYPE html>
@@ -29,7 +30,7 @@
 			<div class="grid-x grid-padding-x">
 				<div class="large-offset-1 medium-offset-1 cell">
 					<ul class="breadcrumbs">
-						<li class="disabled">Home</li>
+						<li class="disabled"><?php echo $menu_type->m_type; ?> Home</li>
 					</ul>
 				</div>
 			</div>
@@ -44,12 +45,13 @@
         	<div class="top-bar" id="main_menu">
         		<div class="top-bar-left">
                      <ul class="dropdown menu" data-dropdown-menu>
-        				<li class="menu-text" style="font-size: .83em;"><img src="media/JCSlogo1.gif" alt="JCS" width="25" height="25" ></li>
+        				<li class="menu-text" style="font-size: .83em;"><img src="<?php echo MEDIA; ?>JCSlogo1.gif" alt="<?php echo $menu_type->m_type; ?>" width="25" height="25" ></li>
+        			<?php //foreach ($menu_types as $mt) { ?>
                       <li>
-                        <a href="#Home">Home</a>
+                        <a href="index.php">Home</a>
                         </li>
                         <li>
-                        <a href="#Tracker">Tracker</a>
+                        <a href="../tracker/index.php">Tracker</a>
                         <ul class="menu">
                         	<li>
                         		<a href="#Tracker-login">Tracker Login</a>
@@ -57,6 +59,7 @@
                         </ul>
                         </li>
                        <li>
+                       <?php //} ?>
                         <a href="#VMas">VMAS</a>
                         <ul class="menu">
                           <li><a href="#VMas-login">VMAS Login</a></li>

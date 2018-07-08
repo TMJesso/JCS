@@ -34,8 +34,6 @@ class Session {
 		$this->check_errors();
 		$this->check_data();
 		$this->check_login();
-		//$this->check_last_activity();
-		//$this->check_login();
 	}
 	
 	/** check to see if the user is logged in

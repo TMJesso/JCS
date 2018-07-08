@@ -2,7 +2,7 @@
 require_once '../../includes/initialize.php';
 $load = true;
 $loadin = true;
-if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submit_menu"]) && !isset($_POST["submit_addmenu"]))) {
+if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submit_menu"]) && !isset($_POST["submit_addmenu"]) && !isset($_POST["submit_delete"]))) {
     $load = false;
     $loadin = true;
     if (isset($_POST["submit_type"])) {
@@ -21,11 +21,13 @@ if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submi
         $this_menu->m_id = get_new_id();
         $this_menu->type_id = $type_id;
         $this_menu->m_order = -1;
+    } elseif ($menu_id == 'sub') {
+        redirect_to('add_submenu.php?tid=' . $type_id);
     } else {
         $this_menu = Menu::get_menu_by_m_id($menu_id);
     }
     $menus = Menu::get_all_menus_by_type_id($type_id);
-} elseif (isset($_POST["submit_addmenu"])) {
+} elseif (isset($_POST["submit_addmenu"])) { // user clicked 'Go' to save it
     $type_id = $base->prevent_injection(hent(ucode($_GET["tid"])));
     $menu_id = $base->prevent_injection(hent(ucode($_GET["mid"])));
     if ($menu_id == "new") {
@@ -49,7 +51,27 @@ if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submi
         $session->errors($errors);
     }
     redirect_to("add_menu.php");
+    
+} elseif (isset($_POST["submit_delete"])) { // delete menu item
+    //echo $_GET["tid"] . " :: " . $_GET["mid"];
+    $load = true;
+    $loadin = false;
+    $m_id = $base->prevent_injection(hent($_GET["mid"]));
+    $t_id = $base->prevent_injection(hent($_GET["tid"]));
+    $delete_menu = Menu::get_menu_by_m_id($m_id);
+    if ($delete_menu->type_id == $t_id) { // proof the type_id and the m_id are the same
+        if ($delete_menu->delete()) {
+            $message = "{$delete_menu->name} has been removed from the menus!";
+            $session->message($message);
+        } else {
+            $errors = array("{$delete_menu->name} was NOT deleted!");
+            $session->errors($errors);
+        }
+        redirect_to('add_menu.php');
+    }
+    
 } else {
+    
     $menu_type = Menu_Type::get_all_type_by_order();
 }
 ?>
@@ -159,6 +181,10 @@ if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submi
 				</label>
 				<div class="text-center">
 					<input type="submit" name="submit_addmenu" class="button" value="Go">
+					<?php if ($menu_id != "new") { ?>
+					<a href="add_submenu.php?tid=<?php echo $type_id; ?>" class="button">Add Submenu</a>
+					<input type="submit" name="submit_delete" class="button" value="Delete" onclick="return confirm('Are you sure you want to remove <?php echo $this_menu->name; ?>?');">
+					<?php } ?>
 				</div>
 			</form>
 		</div>
@@ -182,6 +208,7 @@ if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submi
                 	<select name="select_menu" id="select_menu" required>
                 		<option value="">Choose menu to edit or Add new menu</option>
                 		<option value="new">Add new menu</option>
+                		<option value="sub">Add new Submenu</option>
                 		<?php foreach ($menus as $menu) { ?>
                 		<option value="<?php echo $menu->m_id;?>"><?php echo $menu->m_order . ". " . $menu->name; ?></option>
                 		<?php } ?>
@@ -197,5 +224,7 @@ if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submi
         </div>
     </div>
 </div>
+<?php } else { // show deleted information ?>
+
 <?php } ?>
 <?php include_layout_template('jcs_footer.php'); ?>

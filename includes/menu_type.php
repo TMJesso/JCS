@@ -21,6 +21,8 @@ class Menu_Type extends Common {
         $sql  = "SELECT * FROM " . self::$table_name . " ";
         $sql .= "WHERE m_type = '{$menu_type}' ";
         $sql .= "AND $sec >= security ";
+        $result = self::find_by_sql($sql);
+        return ($result) ? array_shift($result) : false; 
     }
     
     public static function get_all_type_by_order() {
