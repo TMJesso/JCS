@@ -27,7 +27,7 @@ function include_layout_template($template="") {
 }
 
 function get_security_text($num=0) {
-    $sec_text = array('CEO', 'CFO', 'General Manager', 'Department Manager', 'Superintendent', 'Shift Supervisor', 'Foreman', 'Leader', 'Production', 'Public');
+    $sec_text = array('Admin', 'CFO', 'General Manager', 'Department Manager', 'Superintendent', 'Shift Supervisor', 'Foreman', 'Leader', 'Production', 'Public');
     if ($num < count($sec_text)) {
         return $sec_text[$num];
     } else {
@@ -152,6 +152,15 @@ function show_title($title) { ?>
     </div>
 </div>
 <?php 
+}
+
+function password_encrypt($password) {
+    $hash = password_hash($password, PASSWORD_DEFAULT); // php7 built in blowfish encryption
+    return $hash;
+}
+
+function password_check($password, $existing_hash) {
+    return password_verify($password, $existing_hash); // php7 builtin password verification
 }
 
 ?>

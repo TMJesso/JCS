@@ -31,6 +31,16 @@ class User extends Common {
         return ($result) ? array_shift($result) : false;
     }
     
+    public static function get_user_by_username($username='') {
+        if (empty($username)) {
+            return false;
+        }
+        $sql  = "SELECT * FROM " . self::$table_name . " ";
+        $sql .= "WHERE username = '{$username}' ";
+        $sql .= "LIMIT 1";
+        $result = self::find_by_sql($sql);
+        return array_shift($result);
+    }
     
 }
 

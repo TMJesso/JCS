@@ -56,6 +56,17 @@ class Menu extends Common {
         $sql .= "ORDER BY m_order";
         return self::find_by_sql($sql);
     }
+    
+    public static function get_menu_by_find_text($ftext='') {
+        if (empty($ftext)) {
+            return false;
+        }
+        $sql  = "SELECT * FROM " . self::$table_name . " ";
+        $sql .= "WHERE find_text = '{$ftext}' ";
+        $sql .= "LIMIT 1";
+        $result = self::find_by_sql($sql);
+        return ($result) ? array_shift($result) : false;
+    }
  }
 
 ?>

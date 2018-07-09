@@ -18,6 +18,7 @@ require_once LIB_PATH . 'common.php';
 require_once LIB_PATH . 'database.php';
 require_once LIB_PATH . 'menu_type.php';
 require_once LIB_PATH . 'menu.php';
+require_once LIB_PATH . 'menu_tier1.php';
 require_once LIB_PATH . 'user.php';
 //require_once LIB_PATH . 'log.php';
 require_once LIB_PATH . 'session.php';

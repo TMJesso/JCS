@@ -2,8 +2,40 @@
 require_once '../../includes/initialize.php';
 $load = false;
 if (isset($_POST["submit_save"])) {
-    $load = true;
+    $username = trim($base->prevent_injection(hent($_POST["txt_username"])));
+    $password = trim($base->prevent_injection(hent($_POST["txt_passcode"])));
+    $passcode = password_encrypt($username . $password);
+    $security = $_POST["select_security"];
+    $clearance = $_POST["select_clearance"];
+    $user_id = $_POST["hidden_userid"];
+    if (empty($user_id)) { 
+        $user = User::get_user_by_user_id($user_id);
+    } else {
+        $user = new User();
+        $user->user_id = get_new_id();
+    }
+    $user->username = $username;
+    $user->passcode = $passcode;
+    $user->security = $security;
+    $user->clearance = $clearance;
+    $user->changepass = 0;
+    if ($user->save()) {
+        $message = $username . " was successfully saved!";
+        $session->message($message);
+    } else {
+        $errors = array($username . "was NOT saved!");
+        $session->errors($errors);
+    }
+    redirect_to('add_user.php');
     
+} elseif (isset($_POST["submit_choose"])) {
+    $load = true;
+    $user_id = $_POST["select_user"];
+    if ($user_id == "new") {
+        $user = new User();
+    } else {
+        $user = User::get_user_by_user_id($user_id);
+    }
 } else {
     $users = User::get_all_users();
 }
@@ -20,8 +52,9 @@ if (isset($_POST["submit_save"])) {
 						<i class="fi-alert"></i> Please scroll down to view all errors on form if necessary.
 					</p>
 				</div>
+				<input type="hidden" name="hidden_userid" value="<?php echo $user->user_id; ?>" >
 				<label for="txt_username">Username
-					<input type="text" name="txt_username" id="txt_username" value="" placeholder="Case sensitive and must be between 8 and 50 characters" required>
+					<input type="text" name="txt_username" id="txt_username" value="<?php echo $user->username; ?>" placeholder="Case sensitive and must be between 8 and 50 characters" required>
 					<span class="form-error">
 						You must enter the username...
 					</span>
@@ -37,7 +70,7 @@ if (isset($_POST["submit_save"])) {
 					<select name="select_security" id="select_security" required>
 						<option value="">Choose the security level for this user</option>
 						<?php for ($x = 0; $x <= 9; $x++) { ?>
-						<option value="<?php echo $x; ?>"><?php echo $x . ". " . get_security_text($x);?></option>
+						<option value="<?php echo $x; ?>"<?php if ($user->security == $x) { ?>selected <?php } ?>><?php echo $x . ". " . get_security_text($x);?></option>
 						<?php } ?>
 					</select>
 					<span class="form-error">
@@ -49,7 +82,7 @@ if (isset($_POST["submit_save"])) {
 					<select name="select_clearance" id="select_clearance" required>
 						<option value="">Choose the clearance level for this user</option>
 						<?php for ($x = 0; $x <= 9; $x++) { ?>
-						<option value="<?php echo $x; ?>"><?php echo $x . ". " . get_clearance_text($x); ?></option>
+						<option value="<?php echo $x; ?>" <?php if ($user->clearance == $x) { ?>selected <?php } ?>><?php echo $x . ". " . get_clearance_text($x); ?></option>
 						<?php } ?>
 					</select>
 					<span class="form-error">
@@ -78,7 +111,7 @@ if (isset($_POST["submit_save"])) {
 						<i class="fi-alert"></i> Please scroll down to view all errors on form if necessary.
 					</p>
 				</div>
-				<label for="select_user">
+				<label for="select_user">Choose a user or New
 					<select name="select_user" id="select_user" required>
 						<option value="">Choose a user to edit</option>
 						<option value="new">Add new user</option>

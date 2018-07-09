@@ -1,5 +1,6 @@
 <?php
 require_once '../../includes/initialize.php';
+if (!$session->is_logged_in()) { redirect_to('login.php'); }
 $load = true;
 $loadin = true;
 if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submit_menu"]) && !isset($_POST["submit_addmenu"]) && !isset($_POST["submit_delete"]))) {
@@ -72,7 +73,7 @@ if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submi
     
 } else {
     
-    $menu_type = Menu_Type::get_all_type_by_order();
+    $type_menu = Menu_Type::get_all_type_by_order();
 }
 ?>
 
@@ -92,7 +93,7 @@ if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submi
 				<label >
 					<select name="select_menu_type" id="select_menu_type" required>
 						<option value="">Select menu to add a menu item to</option>
-						<?php foreach ($menu_type as $menu) { ?>
+						<?php foreach ($type_menu as $menu) { ?>
 						<option value="<?php echo $menu->type_id; ?>"><?php echo hdent($menu->m_type); ?></option>
 						<?php } ?>
 					</select>
@@ -182,7 +183,7 @@ if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submi
 				<div class="text-center">
 					<input type="submit" name="submit_addmenu" class="button" value="Go">
 					<?php if ($menu_id != "new") { ?>
-					<a href="add_submenu.php?tid=<?php echo $type_id; ?>" class="button">Add Submenu</a>
+					<a href="add_submenu.php?mid=<?php echo $menu_id; ?>" class="button">Add Submenu</a>
 					<input type="submit" name="submit_delete" class="button" value="Delete" onclick="return confirm('Are you sure you want to remove <?php echo $this_menu->name; ?>?');">
 					<?php } ?>
 				</div>
@@ -208,7 +209,6 @@ if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submi
                 	<select name="select_menu" id="select_menu" required>
                 		<option value="">Choose menu to edit or Add new menu</option>
                 		<option value="new">Add new menu</option>
-                		<option value="sub">Add new Submenu</option>
                 		<?php foreach ($menus as $menu) { ?>
                 		<option value="<?php echo $menu->m_id;?>"><?php echo $menu->m_order . ". " . $menu->name; ?></option>
                 		<?php } ?>

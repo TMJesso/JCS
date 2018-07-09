@@ -133,17 +133,17 @@ class Session {
 		// database should find user based on username/password
 		if ($user) {
 			$this->user_id = $_SESSION['user_id'] = $user->username;
-			$this->name = $_SESSION['name'] = $this->fullname($user);
+			//$this->name = $_SESSION['name'] = $this->fullname($user);
 			$this->security = $_SESSION['security'] = $user->security;
 			$this->clearance = $_SESSION['clearance'] = $user->clearance;
 			$this->last_activity = $_SESSION['last_activity'] = time();
-			$ses_clr = $this->get_user_clearance($user->clearance);
-			$ses_sec = $this->get_user_security($user->security);
-			$activity  = "User-ID: " . $this->user_id . " ";
-			$activity .= "Security: " . $ses_sec->name . " ";
-			$activity .= "Clearance: " . $ses_clr->name . " ";
-			$activity  .= "{$ses_sec->name} Login (time): (" . time() . ")";
-			Activity::user_log($user->id, $activity, $ses_sec->name);
+// 			$ses_clr = $this->get_user_clearance($user->clearance);
+// 			$ses_sec = $this->get_user_security($user->security);
+// 			$activity  = "User-ID: " . $this->user_id . " ";
+// 			$activity .= "Security: " . $ses_sec->name . " ";
+// 			$activity .= "Clearance: " . $ses_clr->name . " ";
+// 			$activity  .= "{$ses_sec->name} Login (time): (" . time() . ")";
+// 			Activity::user_log($user->id, $activity, $ses_sec->name);
 			$this->logged_in = $_SESSION["logged_in"] = true;
 			
 		} else {
@@ -176,13 +176,13 @@ class Session {
 	 */
 	public function logout() {
 		if (isset($this->user_id)) {
-			$ses_sec = $this->get_user_security($this->security);
-			$ses_clr = $this->get_user_clearance($this->clearance);
-			$activity  = "User ID: " . $this->user_id . " ";
-			$activity .= "Security: {$ses_sec->name} ";
-			$activity .= "Clearance: {$ses_clr->name} ";
-			$activity .= " Logged Out";
-			Activity::user_log($this->user_id, $activity, $ses_sec->name);
+// 			$ses_sec = $this->get_user_security($this->security);
+// 			$ses_clr = $this->get_user_clearance($this->clearance);
+// 			$activity  = "User ID: " . $this->user_id . " ";
+// 			$activity .= "Security: {$ses_sec->name} ";
+// 			$activity .= "Clearance: {$ses_clr->name} ";
+// 			$activity .= " Logged Out";
+// 			Activity::user_log($this->user_id, $activity, $ses_sec->name);
 		}
 		unset($_SESSION['user_id']);
 		unset($_SESSION["name"]);

@@ -1,6 +1,10 @@
 <?php
-    global $session;
-    $menu_type = Menu_Type::get_by_type("JCS", 9);
+    global $session, $menu_type;
+    if (!isset($menu_type) && is_null($menu_type)) {
+        $menu_type = Menu_Type::get_by_type("JCS", 9);
+    }
+    $menus = Menu::get_all_menus_by_type_id($menu_type->type_id);
+    //$menu_types = Menu_Type::get_all_type_by_order()
 ?>
 <!-- Header -->
 <!DOCTYPE html>
@@ -30,7 +34,7 @@
 			<div class="grid-x grid-padding-x">
 				<div class="large-offset-1 medium-offset-1 cell">
 					<ul class="breadcrumbs">
-						<li class="disabled"><?php echo $menu_type->m_type; ?> Home</li>
+						<li class="disabled"><?php echo hdent($menu_type->m_type); ?> Home</li>
 					</ul>
 				</div>
 			</div>
@@ -45,47 +49,52 @@
         	<div class="top-bar" id="main_menu">
         		<div class="top-bar-left">
                      <ul class="dropdown menu" data-dropdown-menu>
-        				<li class="menu-text" style="font-size: .83em;"><img src="<?php echo MEDIA; ?>JCSlogo1.gif" alt="<?php echo $menu_type->m_type; ?>" width="25" height="25" ></li>
-        			<?php //foreach ($menu_types as $mt) { ?>
+        				<li class="menu-text" style="font-size: .83em;"><?php if ($menu_type->m_type == 'JCS') { ?><img src="<?php echo MEDIA; ?>JCSlogo1.gif" alt="<?php echo hdent($menu_type->m_type); ?>" width="25" height="25" ><?php } else { echo hdent($menu_type->m_type); }?></li>
+         				<?php if ($menu_type->m_type != "JCS") { ?>
+        				<li>
+        					<a href="../../public/admin/index.php">JCS</a>
+        				</li>
+        				<?php } ?>
+       			<?php foreach ($menus as $mt) { ?>
                       <li>
-                        <a href="index.php">Home</a>
-                        </li>
-                        <li>
-                        <a href="../tracker/index.php">Tracker</a>
-                        <ul class="menu">
-                        	<li>
-                        		<a href="#Tracker-login">Tracker Login</a>
-                        	</li>
-                        </ul>
-                        </li>
-                       <li>
-                       <?php //} ?>
-                        <a href="#VMas">VMAS</a>
-                        <ul class="menu">
-                          <li><a href="#VMas-login">VMAS Login</a></li>
-                        </ul>
+                        <a href="<?php echo $mt->m_url; ?>"><?php echo $mt->name; ?></a>
+                        <?php $submenus = Tier1::get_all_submenu_by_menu_id($mt->m_id); ?>
+                        <?php if ($submenus) { ?>
+                        	<?php foreach ($submenus as $sub) { ?>
+                        		<ul class="menu">
+                        			<li><a href="<?php echo $sub->t1_url; ?>"><?php echo $sub->name; ?></a></li>
+                        		</ul>
+                        	<?php } ?>
+                        <?php } ?>
                       </li>
-                      <li><a href="#CLAD">CLAD</a>
-                      	<ul class="menu">
-                      		<li><a href="#CLAD-login">CLAD Login</a></li>
-                      	</ul>
-                      </li>
-                      <li><a href="#Resume">R&eacute;sum&eacute;</a>
-                      	<ul class="menu">
-                      		<li><a href="#Resume-login">R&eacute;sum&eacute; Login</a>
-                      	</ul>
-                      </li>
-                      <li><a href="#Utilities">Utilities</a>
-                      	<ul class="menu">
-                      		<li><a href="#Utilities-more">More Utilities</a></li>
-                      	</ul>
-                      </li>
-                      <li><a href="#System">System</a>
-                      	<ul class="menu">
-                      		<li><a href="#System-more">More System</a></li>
-                      	</ul>
-                      </li>
-                      <li><a href="#logout">Logout</a></li>
+                       <?php } ?>
+<!--                        <li> -->
+<!--                         <a href="#VMas">VMAS</a> -->
+<!--                         <ul class="menu"> -->
+<!--                           <li><a href="#VMas-login">VMAS Login</a></li> -->
+<!--                         </ul> -->
+<!--                       </li> -->
+<!--                       <li><a href="#CLAD">CLAD</a> -->
+<!--                       	<ul class="menu"> -->
+<!--                       		<li><a href="#CLAD-login">CLAD Login</a></li> -->
+<!--                       	</ul> -->
+<!--                       </li> -->
+<!--                       <li><a href="#Resume">R&eacute;sum&eacute;</a> -->
+<!--                       	<ul class="menu"> -->
+<!--                       		<li><a href="#Resume-login">R&eacute;sum&eacute; Login</a> -->
+<!--                       	</ul> -->
+<!--                       </li> -->
+<!--                       <li><a href="#Utilities">Utilities</a> -->
+<!--                       	<ul class="menu"> -->
+<!--                       		<li><a href="#Utilities-more">More Utilities</a></li> -->
+<!--                       	</ul> -->
+<!--                       </li> -->
+<!--                       <li><a href="#System">System</a> -->
+<!--                       	<ul class="menu"> -->
+<!--                       		<li><a href="#System-more">More System</a></li> -->
+<!--                       	</ul> -->
+<!--                       </li> -->
+<!--                       <li><a href="logout.php">Logout</a></li> -->
                     </ul>
             	</div>
         	</div>

@@ -1,14 +1,11 @@
 <?php
 require_once '../../includes/initialize.php';
-$menu_type = Menu_Type::get_by_type("JCS", 9);
+$menu_type = Menu_Type::get_by_type("R&amp;eacute;sum&amp;eacute;", 9);
 
-if (!$session->is_logged_in()) { redirect_to('login.php'); }
 ?>
-
 <?php include_layout_template('jcs_header.php'); ?>
-
+You have reached the index for R&eacute;sum&eacute;!
 
 
 
 <?php include_layout_template('jcs_footer.php'); ?>
-

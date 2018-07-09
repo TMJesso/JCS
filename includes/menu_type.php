@@ -30,6 +30,17 @@ class Menu_Type extends Common {
         $sql .= "ORDER BY type_order";
         return self::find_by_sql($sql);
     }
+    
+    public static function get_by_type_id($id='') {
+        if (empty($id)) {
+            return false;
+        }
+        $sql  = "SELECT * FROM " . self::$table_name . " ";
+        $sql .= "WHERE type_id = '{$id}' ";
+        $sql .= "LIMIT 1";
+        $result = self::find_by_sql($sql);
+        return ($result) ? array_shift($result) : false;
+    }
 }
 
 

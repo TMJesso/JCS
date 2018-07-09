@@ -1,5 +1,5 @@
 <?php
-    global $session;
+    global $session, $thisPage;
     $menu_type = Menu_Type::get_by_type("JCS", 9);
 ?>
 <!-- Header -->
@@ -31,6 +31,9 @@
 				&nbsp;
 			</div>
 			<div class="large-6 medium-6 text-center cell">
+				<?php if (isset($thisPage)) { ?>
+				<h3 class="text-center"><?php  echo $thisPage; ?></h3>
+				<?php } ?>
 				<?php echo output_message($session->message); ?>
 				<?php echo output_errors($session->err); ?>
 			</div>
