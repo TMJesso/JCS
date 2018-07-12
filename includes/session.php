@@ -103,11 +103,11 @@ class Session {
 	}
 	
 	public function get_security() {
-		return $this->security;
+		return (int)$this->security;
 	}
 	
 	public function get_clearance() {
-		return $this->clearance;
+		return (int)$this->clearance;
 	}
 	
 	public function get_last_activity() {

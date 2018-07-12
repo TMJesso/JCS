@@ -99,7 +99,8 @@ if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submi
 					</select>
 				</label>				
 				<div class="text-center">
-					<input type="submit" name="submit_type" id="submit_type" class="button" value="Go">
+					<?php get_submit_button('submit_type', 'Get It'); ?>
+<!-- 					<input type="submit" name="submit_type" id="submit_type" class="button" value="Go"> -->
 				</div>
 			</form>
 		</div>
@@ -144,7 +145,7 @@ if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submi
     								<?php $msg = hdent($men->name); ?>
     							<?php } ?>
     						<?php } ?>
-						<option value="<?php echo $x; ?>" <?php if (!empty($msg)) { if ((int)$this_menu->m_order === $x) { ?>selected <?php } else {?>disabled<?php }}?>><?php echo $x; if (!empty($msg)) { echo " used by " . $msg; } ?></option>
+						<option value="<?php echo $x; ?>" <?php if (!empty($msg)) { if ((int)$this_menu->m_order === $x) { ?>selected <?php }}?>><?php echo $x; if (!empty($msg)) { echo " used by " . $msg; } ?></option>
 						<?php } ?>
 					</select>
 					<span class="form-error">
@@ -181,11 +182,14 @@ if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submi
 					</select>
 				</label>
 				<div class="text-center">
-					<input type="submit" name="submit_addmenu" class="button" value="Go">
+					<?php get_submit_button('submit_addmenu', 'Save'); ?>
+<!-- 					<input type="submit" name="submit_addmenu" class="button" value="Go"> -->
+					<?php get_reset_button(); ?>
 					<?php if ($menu_id != "new") { ?>
 					<a href="add_submenu.php?mid=<?php echo $menu_id; ?>" class="button">Add Submenu</a>
 					<input type="submit" name="submit_delete" class="button" value="Delete" onclick="return confirm('Are you sure you want to remove <?php echo $this_menu->name; ?>?');">
 					<?php } ?>
+					<?php get_cancel_button(); ?>
 				</div>
 			</form>
 		</div>
@@ -210,12 +214,13 @@ if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submi
                 		<option value="">Choose menu to edit or Add new menu</option>
                 		<option value="new">Add new menu</option>
                 		<?php foreach ($menus as $menu) { ?>
-                		<option value="<?php echo $menu->m_id;?>"><?php echo $menu->m_order . ". " . $menu->name; ?></option>
+                		<option value="<?php echo $menu->m_id;?>"><?php echo $menu->m_order . ". " . hdent($menu->name) . " :sec: " . $menu->security . " :clr: " . $menu->clearance; ?></option>
                 		<?php } ?>
                 	</select>
                 </label>
                 <div class="text-center">
-                	<input type="submit" name="submit_menu" id="submit_menu" class="button" value="Go">
+                	<?php get_submit_button('submit_menu', 'Get This');?>
+                	<?php get_cancel_button(); ?>
                 </div>
              </form>
         </div>
@@ -228,3 +233,24 @@ if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submi
 
 <?php } ?>
 <?php include_layout_template('jcs_footer.php'); ?>
+
+
+<?php 
+function get_cancel_button() {
+    ?>
+    <a href="add_menu.php" class="button">Cancel</a>
+    <?php 
+}
+
+function get_reset_button() {
+    ?>
+    <input type="reset" name="reset_addmenu" class="button" value="Reset">
+    <?php
+}
+
+function get_submit_button($name='submit_button', $label='Save') {
+    ?>
+    <input type="submit" name="<?php echo $name; ?>" id="<?php echo $name; ?>" class="button" value="<?php echo $label; ?>">
+    <?php 
+}
+?>
