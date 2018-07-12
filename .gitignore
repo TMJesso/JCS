@@ -14,5 +14,5 @@ sandbox
 vendor/composer
 composer.*
 PHPMailer
-
+README-Template.md
 *.zip
