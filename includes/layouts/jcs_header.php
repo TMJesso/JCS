@@ -47,7 +47,7 @@
 		<div class="grid-container">
 			<div class="top-bar" data-responsive-toggle="main_menu" data-hide-for="medium">
 				<button class="menu-icon" type="button" data-toggle></button>
-				<div class="title-bar-title text-left">&nbsp;&nbsp;Menu</div>
+				<div class="title-bar-title text-left">Menu</div>
 			</div>
         	<div class="top-bar" id="main_menu">
         		<div class="top-bar-left">
@@ -61,7 +61,7 @@
        			<?php foreach ($menus as $mt) { ?>
        				<?php if ((int)$mt->security == $session->get_security()) { ?>
                       <li>
-                        <a href="<?php echo $mt->m_url; ?>"><?php echo $mt->name; ?></a>
+                        <a href="<?php echo $mt->m_url; ?>"><?php echo hdent($mt->name); ?></a>
                         <?php $submenus = Tier1::get_all_submenu_by_menu_id($mt->m_id); ?>
                         <?php if ($submenus) { ?>
                         	<?php foreach ($submenus as $sub) { ?>
