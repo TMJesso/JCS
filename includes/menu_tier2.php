@@ -49,28 +49,31 @@ class Tier2 extends Common {
     }
     
     public static function generate_table_and_data() {
-        if (self::create_table()) {
-            self::load_data();
+        $obj = new self;
+        if ($obj->create_table()) {
+            $obj->load_data();
+            return "Tier2 table was created and populated";
         }
     }
     
     private function create_table() {
         global $base;
         $sql  = "CREATE TABLE IF NOT EXISTS menu_tier2 ( ";
-        $sql .= "id int(11) NOT NULL DEFAULT '0', ";
+        $sql .= "id int(11) NOT NULL DEFAULT 0, ";
         $sql .= "t2_id varbinary(12) NOT NULL, ";
         $sql .= "t1_id varbinary(12) NOT NULL, ";
         $sql .= "name varchar(15) NOT NULL, ";
         $sql .= "t2_url varchar(75) NOT NULL, ";
-        $sql .= "t2_order int(2) NOT NULL DEFAULT '0', ";
-        $sql .= "t2_visible tinyint(1) NOT NULL DEFAULT '0', ";
-        $sql .= "t2_security int(1) NOT NULL DEFAULT '9', ";
-        $sql .= "t2_clearance int(1) NOT NULL DEFAULT '9', ";
+        $sql .= "t2_order int(2) NOT NULL DEFAULT 0, ";
+        $sql .= "t2_visible tinyint(1) NOT NULL DEFAULT 0, ";
+        $sql .= "t2_security int(1) NOT NULL DEFAULT 9, ";
+        $sql .= "t2_clearance int(1) NOT NULL DEFAULT 9, ";
         $sql .= "PRIMARY KEY (t2_id), ";
         $sql .= "UNIQUE KEY id (id), ";
         $sql .= "KEY name (name), ";
         $sql .= "KEY t1_id (t1_id), ";
-        $sql .= "KEY t2_order (t1_id, t2_order) ";
+        $sql .= "KEY t2_order (t1_id, t2_order), ";
+        $sql .= "FOREIGN KEY (t1_id) REFERENCES menu_tier1 (t1_id) ";
         $sql .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
         return $base->query($sql);   
     }

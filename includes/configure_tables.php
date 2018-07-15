@@ -1,4 +1,5 @@
 <?php
+require_once '../../includes/database.php';
 class Config extends Factory {
     //private static $table_names = array();
     

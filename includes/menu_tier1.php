@@ -42,8 +42,10 @@ class Tier1 extends Common {
     }
     
     public static function generate_table_and_data() {
-        if (self::create_table()) {
-            self::load_data();
+        $obj = new self;
+        if ($obj->create_table()) {
+            $obj->load_data();
+            return "Tier1 table was created and populated";
         }
     }
     
@@ -70,9 +72,9 @@ class Tier1 extends Common {
     
     private function load_data() {
         global $base;
-        $sql  = "INSERT IGNORE INTO menu_tier1 (id, t1_id, menu_id, name, t1_url, t1_order, t1_visible, t1_security, t1_clearance) VALUES ";
-        $sql  = "(2, 0x6349714b314c654156796530, 0x34323938766d30397667656d, 'Add User', 'add_user.php', 0, 1, 0, 0), ";
-        $sql  = "(1, 0x7164343141356e4c74763130, 0x633239386866723338683872, 'Add / Edit Menu', 'add_menu.php', 0, 1, 0, 0)";
+        $sql  = 'INSERT IGNORE INTO menu_tier1 (id, t1_id, menu_id, name, t1_url, t1_order, t1_visible, t1_security, t1_clearance) VALUES ';
+        $sql .= '(2, 0x6349714b314c654156796530, 0x34323938766d30397667656d, "Add User", "add_user.php", 0, 1, 0, 0), ';
+        $sql .= '(1, 0x7164343141356e4c74763130, 0x633239386866723338683872, "Add / Edit Menu", "add_menu.php", 0, 1, 0, 0)';
         $base->query($sql);
     }
 }

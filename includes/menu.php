@@ -69,8 +69,10 @@ class Menu extends Common {
     }
 
     public static function generate_table_and_data() {
-        if (self::create_table()) {
-            self::load_data();
+        $obj = new self();
+        if ($obj->create_table()) {
+            $obj->load_data();
+            return "Menu table was created and populated";
         }
     }
     

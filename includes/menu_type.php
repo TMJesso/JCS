@@ -43,8 +43,10 @@ class Menu_Type extends Common {
     }
     
     public static function generate_table_and_data() {
-        if (self::create_table()) {
-            self::load_data();
+        $obj = new self;
+        if ($obj->create_table()) {
+            $obj->load_data();
+            return "Menu_Type table was created and populated";
         }
     }
     
@@ -68,12 +70,12 @@ class Menu_Type extends Common {
     
     private function load_data() {
         global $base;
-        $sql  = "INSERT IGNORE INTO menu_type (id, type_id, m_type, visible, type_order, security, clearance) VALUES ";
-        $sql .= "(5, 0x323158703234646a78337337, 'R&amp;eacute;sum&amp;eacute;', 1, 4, 9, 9), ";
-        $sql .= "(1, 0x373430675842353649354a56, 'JCS', 1, 0, 9, 9), ";
-        $sql .= "(3, 0x583667396346337a76373767, 'VMAS', 1, 2, 9, 9), ";
-        $sql .= "(4, 0x595544314b7275555970376e, 'CLAD', 1, 3, 9, 9), ";
-        $sql .= "(2, 0x624d397977544f3341387035, 'Tracker', 1, 1, 9, 9)";
+        $sql  = 'INSERT IGNORE INTO menu_type (id, type_id, m_type, visible, type_order, security, clearance) VALUES ';
+        $sql .= '(5, 0x323158703234646a78337337, "R&amp;eacute;sum&amp;eacute;", 1, 4, 9, 9), ';
+        $sql .= '(1, 0x373430675842353649354a56, "JCS", 1, 0, 9, 9), ';
+        $sql .= '(3, 0x583667396346337a76373767, "VMAS", 1, 2, 9, 9), ';
+        $sql .= '(4, 0x595544314b7275555970376e, "CLAD", 1, 3, 9, 9), ';
+        $sql .= '(2, 0x624d397977544f3341387035, "Tracker", 1, 1, 9, 9)';
         $base->query($sql);
     }
 }
