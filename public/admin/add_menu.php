@@ -1,6 +1,6 @@
 <?php
 require_once '../../includes/initialize.php';
-if (!$session->is_logged_in()) { redirect_to('login.php'); }
+if (!$session->is_logged_in()) { redirect_to(ADMIN_PATH.'login.php'); }
 $load = true;
 $loadin = true;
 if (isset($_POST["submit_type"]) || (isset($_GET["tid"]) && !isset($_POST["submit_menu"]) && !isset($_POST["submit_addmenu"]) && !isset($_POST["submit_delete"]))) {

@@ -92,7 +92,8 @@ class Menu extends Common {
         $sql .= "UNIQUE KEY id (id), ";
         $sql .= "KEY m_order (m_order), ";
         $sql .= "KEY type_id (type_id), ";
-        $sql .= "KEY name (name) ";
+        $sql .= "KEY name (name), ";
+        $sql .= "FOREIGN KEY (type_id) REFERENCES menu_type (type_id) ";
         $sql .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
         return $base->query($sql);
     }

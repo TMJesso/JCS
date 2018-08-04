@@ -1,6 +1,6 @@
 <?php
 require_once '../../includes/initialize.php';
-if (!$session->is_logged_in()) { redirect_to('login.php'); }
+if (!$session->is_logged_in()) { redirect_to(ADMIN_PATH.'login.php'); }
 
 if (isset($_GET['mid']) && !isset($_POST["submit_submenu"])) {
     $menu = Menu::get_menu_by_m_id($base->prevent_injection(hent($_GET["mid"])));
@@ -100,7 +100,7 @@ if (isset($_GET['mid']) && !isset($_POST["submit_submenu"])) {
 					</span>
 				</label>
 <!-- Clearance -->
-				<label for="select_clearance">
+				<label for="select_clearance">Clearance
 					<select name="select_clearance" id="select_clearance" required>
 						<option value="">Choose clearance level for this submenu</option>
 						<?php for ($x = 0; $x <= 9; $x++) { ?>

@@ -163,5 +163,46 @@ function password_check($password, $existing_hash) {
     return password_verify($password, $existing_hash); // php7 builtin password verification
 }
 
+/**
+ * Filename must include path eg. TRACKER.$filename CANNOT be blank
+ * 
+ * $param1 must include first ? eg. ?id=
+ * 
+ * $param2 - $param4 must include additional & eg. &tid=
+ * 
+ * @param string $filename
+ * @param string $param1
+ * @param string $param2
+ * @param string $param3
+ * @param string $param4
+ */
+function open_form($filename='', $param1='', $param2='', $param3='', $param4='') {
+    if (empty($filename)) {
+        return false;
+    }
+    ?>
+			<form data-abide novalidate method="post" action="<?php echo $filename.$param1.$param2.$param3.$param4; ?>">
+            	<div data-abide-error class="alert callout" style="display: none;">
+            		<p><i class="fi-alert"></i> Please scroll down to view all errors on form.</p>
+				</div>
+    <?php 
+    
+}
+
+
+function close_form() {
+    ?>
+    		</form>
+    <?php 
+}
+
+
+function show_how_many($howmany) {
+    if ($howmany) { ?>
+		<h5 class="text-center">Trackers<br><?php echo $howmany; ?></h5><br><br>
+	<?php } else { ?>
+		&nbsp;
+	<?php } 
+}
 ?>
 

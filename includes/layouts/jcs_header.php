@@ -76,33 +76,6 @@
                       </li>
                       		<?php } ?>
                        <?php } ?>
-<!--                        <li> -->
-<!--                         <a href="#VMas">VMAS</a> -->
-<!--                         <ul class="menu"> -->
-<!--                           <li><a href="#VMas-login">VMAS Login</a></li> -->
-<!--                         </ul> -->
-<!--                       </li> -->
-<!--                       <li><a href="#CLAD">CLAD</a> -->
-<!--                       	<ul class="menu"> -->
-<!--                       		<li><a href="#CLAD-login">CLAD Login</a></li> -->
-<!--                       	</ul> -->
-<!--                       </li> -->
-<!--                       <li><a href="#Resume">R&eacute;sum&eacute;</a> -->
-<!--                       	<ul class="menu"> -->
-<!--                       		<li><a href="#Resume-login">R&eacute;sum&eacute; Login</a> -->
-<!--                       	</ul> -->
-<!--                       </li> -->
-<!--                       <li><a href="#Utilities">Utilities</a> -->
-<!--                       	<ul class="menu"> -->
-<!--                       		<li><a href="#Utilities-more">More Utilities</a></li> -->
-<!--                       	</ul> -->
-<!--                       </li> -->
-<!--                       <li><a href="#System">System</a> -->
-<!--                       	<ul class="menu"> -->
-<!--                       		<li><a href="#System-more">More System</a></li> -->
-<!--                       	</ul> -->
-<!--                       </li> -->
-<!--                       <li><a href="logout.php">Logout</a></li> -->
                     </ul>
             	</div>
         	</div>

@@ -1,5 +1,5 @@
 <?php
-require_once '../../../includes/initialize.php';
+require_once '../../../../includes/initialize.php';
 $menu_type = Menu_Type::get_by_type("R&amp;eacute;sum&amp;eacute;", 9);
 $subtitle = "Welcome to the R&eacute;sum&eacute;";
 ?>

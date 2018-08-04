@@ -3,7 +3,7 @@ require_once '../../includes/initialize.php';
 $menu_type = Menu_Type::get_by_type("JCS", 9);
 $subtitle = "Welcome to JCS Home Page";
 
-if (!$session->is_logged_in()) { redirect_to('login.php'); }
+if (!$session->is_logged_in()) { redirect_to(ADMIN_PATH.'login.php'); }
 ?>
 
 <?php include_layout_template('jcs_header.php'); ?>

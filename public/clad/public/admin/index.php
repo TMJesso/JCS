@@ -1,5 +1,5 @@
 <?php
-require_once '../../../includes/initialize.php';
+require_once '../../../../includes/initialize.php';
 $menu_type = Menu_Type::get_by_type("CLAD", 9);
 $subtitle = "Welcome to the Change Log and Application Development log";
 ?>

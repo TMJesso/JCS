@@ -33,7 +33,7 @@ $subtitle = "TEMPLATE";
 						<i class="fi-alert"></i> Please scroll down to view all errors on form if necessary.
 					</p>
 				</div>
-				<label for="txt_template_id">Text Box
+				<label for="txt_template_id">Template Box
 					<input type="text" name="text_template" id="txt_template_id" maxlength="25" value="" placeholder="Maximum of 25 characters" required>
 					<span class="form-error">
 						You must enter text in this template box

@@ -31,12 +31,28 @@ class User_Detail extends Common {
     
     public $entity;
     
+    
+    public static function get_details_by_user_id($id='') {
+        $sql  = "SELECT * FROM " . self::$table_name . " ";
+        $sql .= "WHERE user_id = '{$id}'";
+        $result = self::find_by_sql($sql);
+        return ($result) ? array_shift($result) : false;
+    }
+    
     public static function generate_table_and_data() {
         $obj = new self();
         if ($obj->create_table()) {
             $obj->load_data();
             return "User_Type table was created and populated";
         }
+    }
+    
+    public function get_fullname() {
+        return $this->fname . " " . $this->lname;
+    }
+    
+    public function get_reverse_name() {
+        return $this->lname . ", " . $this->fname;
     }
     
     private function create_table() {

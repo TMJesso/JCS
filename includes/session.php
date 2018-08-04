@@ -49,7 +49,7 @@ class Session {
 			if (!$this->check_idleness()) {
 				$this->message("You have been logged out for 30 minutes of inactivity!");
 				$this->logout();
-				redirect_to("login.php");
+				redirect_to(ADMIN_PATH."login.php");
 			}
 		}
 		return $this->logged_in();
