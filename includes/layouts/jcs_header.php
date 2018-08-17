@@ -64,13 +64,13 @@
                         <a href="<?php echo $mt->m_url; ?>"><?php echo hdent($mt->name); ?></a>
                         <?php $submenus = Tier1::get_all_submenu_by_menu_id($mt->m_id); ?>
                         <?php if ($submenus) { ?>
+                        	<ul class="menu">
                         	<?php foreach ($submenus as $sub) { ?>
                         		<?php if ((int)$sub->t1_security == $session->get_security()) { ?>
-                        		<ul class="menu">
                         			<li><a href="<?php echo $sub->t1_url; ?>"><?php echo $sub->name; ?></a></li>
-                        		</ul>
                         		<?php } ?>
                         	<?php } ?>
+                        	</ul>
                         	
                         <?php } ?>
                       </li>

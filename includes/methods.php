@@ -98,6 +98,10 @@ function redirect_to($location = null) {
     }
 }
 
+function has_presence($value) {
+    return ((isset($value) && $value !== "") || is_numeric($value));
+}
+
 /** urlencode
  *
  * @param string $code

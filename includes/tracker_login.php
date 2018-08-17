@@ -32,6 +32,15 @@ class Login extends Common {
         $result = self::find_by_sql($sql);
         return ($result) ? array_shift($result) : false;
     }
+    
+    public static function get_login_by_login_id($id=0) {
+        $sql  = "SELECT * FROM " . self::$table_name . " ";
+        $sql .= "WHERE id = {$id} ";
+        $sql .= "LIMIT 1";
+        $result = self::find_by_sql($sql);
+        return ($result) ? array_shift($result) : false;
+    }
+    
     public static function howmany() {
         global $base;
         $sql = "SELECT COUNT(*) FROM " . self::$table_name;

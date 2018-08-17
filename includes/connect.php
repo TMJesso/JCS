@@ -5,7 +5,7 @@ if ($_SERVER["SERVER_NAME"] == "localhost") {
 	defined('DB_USER')		? null : define('DB_USER', 'jkOP89x33');
 	defined('DB_PASS')		? null : define('DB_PASS', 'Va3ILdAfsQWe2sQb');
 	defined('DB_NAME')		? null : define('DB_NAME', '07012018_636c6164');
-	defined('DB_PORT')		? null : define('DB_PORT', 3306);
+	defined('DB_PORT')		? null : define('DB_PORT', 3308);
 	defined('DB_SOCKET')	? null : define('DB_SOCKET', null);
 } elseif ($_SERVER["SERVER_NAME"] == "theraljessop.net" || $_SERVER["SERVER_NAME"] == "theraljessopnet.ipage.com") {
 	defined('DB_SERVER')	? null : define('DB_SERVER', 'theraljessopnet.ipagemysql.com');

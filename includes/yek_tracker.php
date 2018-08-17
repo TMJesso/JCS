@@ -85,7 +85,7 @@ class Yekym extends Common {
      * @return boolean||string ($z returned character)
      */
     public static function get_character($x = '', $y = '') {
-        if (empty($x) || empty($y)) {
+        if (!has_presence($x) || !has_presence($y)) {
             return false;
         } else {
             $sql  = "SELECT * FROM " . self::$table_name . " ";
@@ -119,7 +119,7 @@ class Yekym extends Common {
      * @return boolean||string xy (x, y)
      */
     public static function generate_code($x='', $letter='') {
-        if (empty($x) || empty($letter)) {
+        if (!has_presence($letter) || !has_presence($letter)) {
             return false;
         }
         $sql  = "SELECT * FROM " . self::$table_name . " ";
