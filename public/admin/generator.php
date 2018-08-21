@@ -1,4 +1,9 @@
-<?php require_once '../../includes/initialize.php';
+<?php 
+echo "NOT ABLE TO RUN AGAIN!!!!";
+return;
+
+
+require_once '../../includes/initialize.php';
 require_once 'generate_tables.php';
 $n = null;
 $num = array(array());

@@ -5,7 +5,7 @@ $load_first = false;
 $load_second = false;
 $form_file = TRACKER . 'add_login.php';
 $user = User::get_user_by_username($session->get_user_id());
-
+$editing = false;
 if (isset($_POST['submit_add_edit_button'])) {
     $load_first = true;
     $load_second = true;
@@ -13,9 +13,10 @@ if (isset($_POST['submit_add_edit_button'])) {
     $subtitle = "Login info for " . $details->get_fullname();
     $how_many = Login::howmany();
     if ($_POST['select_login'] === 'new') {
-        
+        $editing = false;
         
     } else {
+        $editing = true;
         $descript = Login::get_login_by_login_id(Login::find_max_id())->descript;
         $tk = Login::get_login_by_id($_POST['select_login']);
         
@@ -32,6 +33,7 @@ if (isset($_POST['submit_add_edit_button'])) {
         }
     }
 } elseif (isset($_POST['submit_login'])) {
+    if ($_POST['submit_login'] == 'Save') { // adding new
     $message = "";
     $pw = trim($_POST['area_pass']);
     $ur = $base->prevent_injection(trim($_POST['txt_username']));
@@ -97,6 +99,31 @@ if (isset($_POST['submit_add_edit_button'])) {
     }
     $session->message($message);
     redirect_to(TRACKER . 'add_login.php');
+    } else {
+// ******************************************* //
+// ***************** editing ***************** //
+// ******************************************* //
+        $editing = false;
+        $load_first = true;
+        $load_second = true;
+        $how_many = Login::howmany();
+        $pwun_id = $base->prevent_injection(hent($_GET['unpw']));
+        $unpw_id = $base->prevent_injection(hent($_GET['pwun']));
+        $uncodes = Codes::get_codes_by_id($unpw_id);
+        $pwcodes = Codes::get_codes_by_id($pwun_id);
+        $username = "";
+        $passcode = "";
+        foreach ($pwcodes as $pwcd) {
+            $username .= chr(Yekym::get_character(((hexdec(strrev($pwcd->multiplier))) / $pwcd->weight), ((hexdec(strrev($pwcd->codex))) / $pwcd->weight)));
+        }
+        foreach ($uncodes as $pwcd) {
+            $passcode .= chr(Yekym::get_character(((hexdec(strrev($pwcd->multiplier))) / $pwcd->weight), ((hexdec(strrev($pwcd->codex))) / $pwcd->weight)));
+        }
+        $login_id = UnPw::get_unpw_by_id($pwun_id)->login_id;
+        $login = Login::get_login_by_login_id($login_id);
+        $descript = $login->descript;
+        $url = $login->url;
+    }
 } elseif ($load_first) {
   
 } else {
@@ -159,42 +186,43 @@ if (isset($_POST['submit_add_edit_button'])) {
 		<?php } ?>
 		</div>
 		<div class="large-6 medium-6 cell">
-			<form data-abide novalidate method="post" action="<?php echo TRACKER; ?>add_login.php">
+			<form data-abide novalidate method="post" action="<?php echo TRACKER; ?>add_login.php<?php if ($editing) { ?>?unpw=<?php echo $tkunw[1]->unpw_id; ?>&pwun=<?php echo $tkunw[0]->unpw_id; }?>">
             	<div data-abide-error class="alert callout" style="display: none;">
             		<p><i class="fi-alert"></i> Please scroll down to view all errors on form.</p>
 				</div>
 <!-- Description -->
 				<label for="txt_descript">Description
-					<input type="text" name="txt_descript" id="txt_descript" maxlength="75" placeholder="Description of Login! Max 75" value="<?php if (isset($tk)) { echo $tk->descript; }?>" required>
+					<input type="text" name="txt_descript" id="txt_descript" maxlength="75" placeholder="Description of Login! Max 75" value="<?php if (isset($tk)) { echo $tk->descript; } ?>" required <?php if ($editing) { ?>readonly<?php } ?>>
 					<span class="form-error">
 						You must enter the Description for this login!
 					</span>
 				</label>
 <!-- URL -->
 				<label for="txt_url">URL
- 					<input type="text" name="txt_url" id="txt_url" maxlength="150" placeholder="URL of this login! Max 150" value="<?php if (isset($tk)) { echo $tk->url; } ?>" required>
+ 					<input type="text" name="txt_url" id="txt_url" maxlength="150" placeholder="URL of this login! Max 150"  required value="<?php if (isset($tk)) { echo $tk->url; } ?>" <?php if ($editing) { ?>readonly<?php } ?>>
 					<span class="form-error">
 						If URL is not available at this time please place a # as a place holder.
 					</span>
 				</label>
 <!-- Username -->
 				<label for="txt_username">Username
-					<textarea rows="4" name="txt_username" id="txt_username" placeholder="None for no username!" required><?php if (isset($username)) { echo $username; } ?></textarea>
+					<textarea rows="4" name="txt_username" id="txt_username" aria-describedby="area_user_help" placeholder="None for no username!" required <?php if ($editing) { ?>readonly<?php } ?>><?php if (isset($username)) { echo $username; } ?></textarea>
 <!-- 					<input type="text" name="txt_username" id="txt_username" maxlength="200" placeholder="None for no username! Max 200" value="" required> -->
 					<span class="form-error">
-						You must enter a username for this login. Enter none if no username is used!
+						You must enter a username for this login. Enter None if no username is used!
 					</span>
 				</label>
+				<p class="help-text" id="area_user_help">If there is no username, enter None</p>
 <!-- Passcode -->
 				<label for="area_pass">Passcode 
-					<textarea rows="4" name="area_pass" id="area_pass" aria-describedby="area_pass_help" required><?php if (isset($passcode)) { echo $passcode; } ?></textarea>
+					<textarea rows="4" name="area_pass" id="area_pass" aria-describedby="area_pass_help" required <?php if ($editing) { ?>readonly <?php } ?>><?php if (isset($passcode)) { echo $passcode; } ?></textarea>
 					<span class="form-error">
 						You must enter a passcode! Use none if no passcode is used.
 					</span>
 				</label>
 				<p class="help-text" id="area_pass_help">Invalid characters: (apostrophe) &#39;, (quotation mark) &quot;, (vertical line) |, &amp; (tilde) &#126;</p>
 				<div class="text-center">
-					<input type="submit" class="button" name="submit_login" id="submit_login" value="Save">
+					<input type="submit" class="button" name="submit_login" id="submit_login" value="<?php if ($editing) { ?>Edit<?php } else { ?>Save<?php } ?>">
 					<input type="reset" class="button" name="reset_login" id="reset_login" value="Cancel">
 				</div>
 			</form>
@@ -248,4 +276,6 @@ function check_invalid_characters($letter=0) {
             return false;
     }
 }
+
+
 ?>

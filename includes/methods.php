@@ -208,5 +208,48 @@ function show_how_many($howmany) {
 		&nbsp;
 	<?php } 
 }
+
+function get_username($un) {
+    $uncodes = Codes::get_codes_by_id($un->unpw_id);
+    $username = "";
+    foreach ($uncodes as $uncd) {
+        $username .= $uncd->multiplier.$uncd->slt.$uncd->codex;
+    }
+    return $username;
+}
+
+function get_passcode($pw) {
+    $pwcodes = Codes::get_codes_by_id($pw->unpw_id);
+    $passcode = "";
+    foreach ($pwcodes as $pwcd) {
+        $passcode .= $pwcd->multiplier.$pwcd->slt.$pwcd->codex;
+    }
+    return $passcode;
+}
+
+function get_un($tracker) {
+    $unpw = UnPw::get_all_by_login_id($tracker);
+    foreach ($unpw as $uw) {
+        if ($uw->user_pass) {
+            $pw = $uw;
+        } else {
+            $un = $uw;
+        }
+    }
+    return $un;
+}
+
+function get_pw($tracker) {
+    $unpw = UnPw::get_all_by_login_id($tracker);
+    foreach ($unpw as $uw) {
+        if ($uw->user_pass) {
+            $pw = $uw;
+        } else {
+            $un = $uw;
+        }
+    }
+    return $pw;
+}
+
 ?>
 
