@@ -216,6 +216,12 @@ class Codes extends Common {
         return self::find_by_sql($sql);
     }
     
+    public static function delete_all_codes_for_unpw_id($id='') {
+        global $base;
+        $sql  = "DELETE FROM " . self::$table_name . " ";
+        $sql .= "WHERE unpw_id = '{$id}'";
+        return $base->query($sql);
+    }
     
     public function gen_salt($length=22) {
         $this->slt = substr(md5(uniqid(mt_rand(), true)), 0, $length);
@@ -266,4 +272,66 @@ class Codes extends Common {
         return false;
     }
 }
+
+class CodeB extends Common {
+    protected static $table_name = "codes_back";
+    protected static $db_fields = array('id', 'codes_id', 'unpw_id', 'multiplier', 'codex', 'weight', 'slt', 'code_order');
+    
+    public $id;
+    
+    public $codes_id;
+    
+    public $unpw_id;
+    
+    /**
+     * only x should be placed in here
+     *
+     * @var mixed
+     */
+    public $multiplier;
+    
+    /**
+     * only y should be placed in here
+     *
+     * @var mixed
+     */
+    public $codex;
+    
+    /**
+     * the hex value reversed of code weight
+     *
+     * @var mixed
+     */
+    public $weight;
+    
+    /**
+     * salt value
+     * @var string
+     */
+    public $slt;
+    
+    public $code_order;
+
+
+    public static function get_all_codes_by_id($id) {
+        $sql  = "SELECT * FROM " . self::$table_name . " ";
+        $sql .= "WHERE unpw_id = '{$id}' ";
+        $sql .= "ORDER BY unpw_id, code_order";
+        return self::find_by_sql($sql);
+    }
+    
+    public static function copy_codes_by_id($id) {
+        global $base;
+        $sql  = "INSERT IGNORE INTO " . self::$table_name . " ";
+        $sql .= "SELECT * FROM login_codes ";
+        $sql .= "WHERE unpw_id = '{$id}' ";
+        if ($base->query($sql)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+
 ?>

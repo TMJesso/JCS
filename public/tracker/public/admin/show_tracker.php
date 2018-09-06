@@ -62,6 +62,10 @@ if (isset($_POST['select_tracker'])) {
             $passcode .= chr(Yekym::get_character(((hexdec(strrev($pwcd->multiplier))) / $pwcd->weight), ((hexdec(strrev($pwcd->codex))) / $pwcd->weight)));
         }
     }
+} elseif (isset($_POST['submit_show'])) {
+    if ($_POST['submit_show'] == 'Close') {
+        redirect_to(TRACKER . "show_tracker.php");
+    }
 } else {
 
 
@@ -123,7 +127,7 @@ if (isset($_GET['lid'])) {
 			<fieldset class="callout">
 				<legend>Username</legend>
     			<label for="area_username">
-    				<textarea name="area_username" id="area_username" rows="5"><?php echo $username; ?></textarea>
+    				<textarea name="area_username" id="area_username" rows="5" readonly><?php echo $username; ?></textarea>
     			</label>
     			<div class="text-center"><input type="submit" name="submit_decode_username" id="submit_decode_username" value="<?php if ($username_button) { ?>hide<?php } else { ?>decode<?php } ?>"></div>
  			</fieldset>
@@ -132,7 +136,7 @@ if (isset($_GET['lid'])) {
 				<fieldset class="callout">
 				<legend>Passcode</legend>
     			<label for="area_passcode">
-    				<textarea name="area_passcode" id="area_passcode" rows="6"><?php echo $passcode; ?></textarea>
+    				<textarea name="area_passcode" id="area_passcode" rows="6" readonly><?php echo $passcode; ?></textarea>
     			</label>
     			<div class="text-center"><input type="submit" name="submit_decode_passcode" id="submit_decode_passcode" value="<?php if ($pw_button) { ?>hide<?php } else { ?>decode<?php } ?>"></div>
  			</fieldset>
@@ -153,9 +157,3 @@ if (isset($_GET['lid'])) {
 
 
 <?php include_layout_template('jcs_footer.php'); ?>
-
-
-<?php 
-
-
-?>

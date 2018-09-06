@@ -24,7 +24,7 @@ class Session {
 	 *
 	 * @var integer
 	 */
-	private $activity_timeout = 1800;  // 1800 is 30 minutes has been increased to 1 hour
+	private $activity_timeout = 5400;  // 1800 is 30 minutes has been increased to 1 hour
 	
 	private $last_activity;
 	

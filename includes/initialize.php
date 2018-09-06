@@ -13,6 +13,8 @@ defined('MEDIA')            ? null : define('MEDIA', PUBLIC_PATH . DS . 'media' 
 defined('LAYOUT')           ? null : define('LAYOUT', SITE_ROOT . DS . 'includes' . DS . 'layouts' . DS);
 defined('PUBLIC_TRACKER')   ? null : define('PUBLIC_TRACKER', PUBLIC_PATH . 'tracker' . DS . 'public' . DS);
 defined('TRACKER')          ? null : define('TRACKER', PUBLIC_TRACKER . 'admin' . DS);
+defined('PUBLIC_RESUME')    ? null : define('PUBLIC_RESUME', PUBLIC_PATH . 'resume' . DS . 'public' . DS);
+defined('RESUME')           ? null : define('RESUME', PUBLIC_RESUME . 'admin' . DS);
 // defined('PUBLIC_VMAS')      ? null : define('PUBLIC_VMAS', SITE_HTTP . DS . 'vmas' . DS . 'public' . DS);
 // defined('VMAS')             ? null : define('VMAS', PUBLIC_VMAS . 'admin' . DS);
 // defined('PUBLIC_CLAD')      ? null : define('PUBLIC_CLAD', SITE_HTTP . DS . 'clad' . DS . 'public' . DS);
@@ -30,6 +32,7 @@ require_once LIB_PATH . 'user.php';
 require_once LIB_PATH . 'user_details.php';
 require_once LIB_PATH . 'yek_tracker.php';
 require_once LIB_PATH . 'tracker_login.php';
+require_once LIB_PATH . 'summary.php';
 // require_once LIB_PATH . 'log.php';
 require_once LIB_PATH . 'session.php';
 

@@ -6,6 +6,7 @@ $load_second = false;
 $form_file = TRACKER . 'add_login.php';
 $user = User::get_user_by_username($session->get_user_id());
 $editing = false;
+$edit_fields = false;
 if (isset($_POST['submit_add_edit_button'])) {
     $load_first = true;
     $load_second = true;
@@ -14,9 +15,10 @@ if (isset($_POST['submit_add_edit_button'])) {
     $how_many = Login::howmany();
     if ($_POST['select_login'] === 'new') {
         $editing = false;
-        
+        $edit_fields = true;
     } else {
         $editing = true;
+        $edit_fields = true;
         $descript = Login::get_login_by_login_id(Login::find_max_id())->descript;
         $tk = Login::get_login_by_id($_POST['select_login']);
         
@@ -26,10 +28,12 @@ if (isset($_POST['submit_add_edit_button'])) {
         $username = "";
         $passcode = "";
         foreach ($tkuncodes as $un) {
-            $username .= $un->multiplier.$un->slt.$un->codex;
+            $username .= chr(Yekym::get_character(((hexdec(strrev($un->multiplier))) / $un->weight), ((hexdec(strrev($un->codex))) / $un->weight)));
+//             $username .= $un->multiplier.$un->slt.$un->codex;
         }
         foreach ($tkpwcodes as $pw) {
-            $passcode .= $pw->multiplier.$pw->slt.$pw->codex;
+            $passcode .= chr(Yekym::get_character(((hexdec(strrev($pw->multiplier))) / $pw->weight), ((hexdec(strrev($pw->codex))) / $pw->weight)));
+//             $passcode .= $pw->multiplier.$pw->slt.$pw->codex;
         }
     }
 } elseif (isset($_POST['submit_login'])) {
@@ -38,8 +42,50 @@ if (isset($_POST['submit_add_edit_button'])) {
     $pw = trim($_POST['area_pass']);
     $ur = $base->prevent_injection(trim($_POST['txt_username']));
     $this_txt = "";
+    $edit_fields = true;
+    $editing = true;
+    if (isset($_GET['unpw']) && isset($_GET['pwun'])) {
+        $un_id = hent(ucode($_GET['unpw']));
+        $temp = UnPw::get_unpw_by_id($un_id);
+        $unpw = UnPw::get_all_by_login_id($temp->login_id);
+        $message = "";
+        $temp_un = $base->prevent_injection(hent($_POST['txt_username']));
+        $temp_pw = $base->prevent_injection(hent($_POST['area_pass']));
+        
+        foreach ($unpw as $up) {
+            // info 
+    
+            if ($up->user_pass) {
+                $message .= "Passcode";
+                 $this_txt = $temp_pw;
+            } else {
+               $message .= "Username";
+                $this_txt = $temp_un;
+            }
+         
+            // info  function call to generate code
+            generate_secret_code($this_txt, $up);
+//             $session->message($message);
+        
+        
+    
+        }
+
+        
+        $login = Login::get_login_by_id($temp->login_id);
+        $login->descript = $base->prevent_injection(hent($_POST['txt_descript']));
+        $login->url = $base->prevent_injection(hent($_POST['txt_url']));
+        if ($login->save()) {
+            $message .= "Descript: " . $login->descript . " has been updated!<br>";
+            $message .= "And URL: " . $login->url . " has been updated!";
+        }
+        
+    } else { 
+        
+    
     $login = new Login();
     $login->login_id = get_new_id();
+    }
     $login->user_id = $user->user_id;
     $login->descript = $base->prevent_injection(hent(trim($_POST['txt_descript'])));
     $login->url = $base->prevent_injection(hent(trim($_POST['txt_url'])));
@@ -62,33 +108,9 @@ if (isset($_POST['submit_add_edit_button'])) {
                     $this_txt = $pw;
                 }
                 $message .= "!<br>";
-                $a = 0;
-                echo $this_txt;
-                for ($y = 0; $y < strlen($this_txt); $y++) {
-                    $my_chr = substr($this_txt, $y, 1);
-                    if ($temp = check_invalid_characters(ord($my_chr))) {
-                        continue;
-                    }
-                    $codes = new Codes();
-                    $codes->gen_salt(12);
-                    $codes->codes_id = get_new_id();
-                    $codes->unpw_id = $unpw->unpw_id;
-                    $weight = get_random_value(2, 9);
-                    $x_value = get_random_number();
-                    //$y_value = get_random_number();
-                    $codes->multiplier = strrev(dechex($weight * $x_value));
-                    $str_value = Yekym::generate_code($x_value, $my_chr);
-                    
-                    $codes->codex = strrev(dechex($weight * ord($str_value)));
-                    $codes->weight = strrev(dechex($weight));
-                    $codes->code_order = $a;
-                    $a++;
-                    if ($codes->save()) {
-                        $message .= $codes->multiplier.$codes->slt.$codes->codex . "<br>";
-                    } else {
-                        $message .= $codes->multiplier.$codes->codex . " was NOT saved!<br>";
-                    }
-                }
+                // info  function call to generate code
+                generate_secret_code($this_txt, $unpw);
+                
             } else {
                 $message .= "UNPW data was NOT saved!";
             }
@@ -96,33 +118,81 @@ if (isset($_POST['submit_add_edit_button'])) {
         }
     } else {
         $message .= "Login info was NOT saved!";
+        $message .= "<br><br>";
     }
     $session->message($message);
     redirect_to(TRACKER . 'add_login.php');
-    } else {
+    } elseif ($_POST['submit_login'] == 'Edit') {
 // ******************************************* //
 // ***************** editing ***************** //
 // ******************************************* //
-        $editing = false;
+        $editing = true;
+        $edit_fields = false;
         $load_first = true;
         $load_second = true;
         $how_many = Login::howmany();
-        $pwun_id = $base->prevent_injection(hent($_GET['unpw']));
-        $unpw_id = $base->prevent_injection(hent($_GET['pwun']));
+        
+        $pwun_id = $base->prevent_injection(hent($_GET['unpw'])); // username
+        $unpw_id = $base->prevent_injection(hent($_GET['pwun'])); // passcode
+        
+        $un_info = UnPw::get_unpw_by_id($pwun_id);
+        $pw_info = UnPw::get_unpw_by_id($unpw_id);
+        
         $uncodes = Codes::get_codes_by_id($unpw_id);
         $pwcodes = Codes::get_codes_by_id($pwun_id);
+        $proceedu = false;
+        $proceedp = false;
+        $backedun = CodeB::copy_codes_by_id($pwun_id);
+        if ($backedun) {
+            $codes = Codes::delete_all_codes_for_unpw_id($pwun_id);
+            if ($codes) {
+                $message .= "Login Codes for 'Username'";
+                $proceedu = true;
+            }
+            $message .= " are being prepared for edited information!<br>";
+        }
+        $backedpw = CodeB::copy_codes_by_id($unpw_id);
+        if ($backedpw) {
+            $codes = Codes::delete_all_codes_for_unpw_id($unpw_id);
+            if ($codes) {
+                $message .= "Login Codes for 'Passcode'";
+                $proceedp = true;
+            }
+            $message .= " are being prepared for edited information!<br>";
+        }
         $username = "";
         $passcode = "";
-        foreach ($pwcodes as $pwcd) {
-            $username .= chr(Yekym::get_character(((hexdec(strrev($pwcd->multiplier))) / $pwcd->weight), ((hexdec(strrev($pwcd->codex))) / $pwcd->weight)));
+        $descript = $base->prevent_injection(hent($_POST['txt_descript']));
+        $url = $base->prevent_injection(hent($_POST['txt_url']));
+        
+        $txt_passcode = $base->prevent_injection(hent($_POST['area_pass']));
+        $txt_username = $base->prevent_injection(hent($_POST['txt_username']));
+        if ($proceedu) {
+            generate_secret_code($txt_username, $un_info);
+        } else {
+            $errors = array("Username"=>"Unable to save username information!");
         }
-        foreach ($uncodes as $pwcd) {
-            $passcode .= chr(Yekym::get_character(((hexdec(strrev($pwcd->multiplier))) / $pwcd->weight), ((hexdec(strrev($pwcd->codex))) / $pwcd->weight)));
+        if ($proceedp) {
+            generate_secret_code($txt_passcode, $pw_info);
+        } else {
+            $errors = array("Passcode"=>"Unable to save passcode information!");
         }
+        $message .= "<br>";
+
         $login_id = UnPw::get_unpw_by_id($pwun_id)->login_id;
-        $login = Login::get_login_by_login_id($login_id);
-        $descript = $login->descript;
-        $url = $login->url;
+        $login = Login::get_login_by_id($login_id);
+        $login->descript = $descript;
+        $login->url = $url;
+        if ($login->save()) {
+            $message .= "Login info has been saved!!!!<br><br>";
+            if (isset($errors)) {
+                $session->errors($errors);
+            }
+            $session->message($message);
+            redirect_to($form_file);
+        }
+    } elseif ($_POST['submit_login'] == 'Change') {
+        
     }
 } elseif ($load_first) {
   
@@ -192,21 +262,21 @@ if (isset($_POST['submit_add_edit_button'])) {
 				</div>
 <!-- Description -->
 				<label for="txt_descript">Description
-					<input type="text" name="txt_descript" id="txt_descript" maxlength="75" placeholder="Description of Login! Max 75" value="<?php if (isset($tk)) { echo $tk->descript; } ?>" required <?php if ($editing) { ?>readonly<?php } ?>>
+					<input type="text" name="txt_descript" id="txt_descript" maxlength="75" placeholder="Description of Login! Max 75" value="<?php if (isset($tk)) { echo $tk->descript; } elseif (isset($descript)) { echo $descript; } ?>" required <?php if (!$edit_fields) { ?>readonly<?php } ?>>
 					<span class="form-error">
 						You must enter the Description for this login!
 					</span>
 				</label>
 <!-- URL -->
 				<label for="txt_url">URL
- 					<input type="text" name="txt_url" id="txt_url" maxlength="150" placeholder="URL of this login! Max 150"  required value="<?php if (isset($tk)) { echo $tk->url; } ?>" <?php if ($editing) { ?>readonly<?php } ?>>
+ 					<input type="text" name="txt_url" id="txt_url" maxlength="150" placeholder="URL of this login! Max 150"  required value="<?php if (isset($tk)) { echo $tk->url; } elseif (isset($url)) { echo $url; } ?>" <?php if (!$edit_fields) { ?>readonly<?php } ?>>
 					<span class="form-error">
 						If URL is not available at this time please place a # as a place holder.
 					</span>
 				</label>
 <!-- Username -->
 				<label for="txt_username">Username
-					<textarea rows="4" name="txt_username" id="txt_username" aria-describedby="area_user_help" placeholder="None for no username!" required <?php if ($editing) { ?>readonly<?php } ?>><?php if (isset($username)) { echo $username; } ?></textarea>
+					<textarea rows="4" name="txt_username" id="txt_username" aria-describedby="area_user_help" placeholder="None for no username!" required <?php if (!$edit_fields) { ?>readonly<?php } ?>><?php if (isset($username)) { echo $username; } ?></textarea>
 <!-- 					<input type="text" name="txt_username" id="txt_username" maxlength="200" placeholder="None for no username! Max 200" value="" required> -->
 					<span class="form-error">
 						You must enter a username for this login. Enter None if no username is used!
@@ -215,14 +285,14 @@ if (isset($_POST['submit_add_edit_button'])) {
 				<p class="help-text" id="area_user_help">If there is no username, enter None</p>
 <!-- Passcode -->
 				<label for="area_pass">Passcode 
-					<textarea rows="4" name="area_pass" id="area_pass" aria-describedby="area_pass_help" required <?php if ($editing) { ?>readonly <?php } ?>><?php if (isset($passcode)) { echo $passcode; } ?></textarea>
+					<textarea rows="4" name="area_pass" id="area_pass" aria-describedby="area_pass_help" required <?php if (!$edit_fields) { ?>readonly <?php } ?>><?php if (isset($passcode)) { echo $passcode; } ?></textarea>
 					<span class="form-error">
 						You must enter a passcode! Use none if no passcode is used.
 					</span>
 				</label>
 				<p class="help-text" id="area_pass_help">Invalid characters: (apostrophe) &#39;, (quotation mark) &quot;, (vertical line) |, &amp; (tilde) &#126;</p>
 				<div class="text-center">
-					<input type="submit" class="button" name="submit_login" id="submit_login" value="<?php if ($editing) { ?>Edit<?php } else { ?>Save<?php } ?>">
+					<input type="submit" class="button" name="submit_login" id="submit_login" value="<?php if ($editing && !$edit_fields) { ?>Change<?php } elseif ($editing && $edit_fields) { ?>Edit<?php } else { ?>Save<?php } ?>">
 					<input type="reset" class="button" name="reset_login" id="reset_login" value="Cancel">
 				</div>
 			</form>
@@ -277,5 +347,43 @@ function check_invalid_characters($letter=0) {
     }
 }
 
+function generate_secret_code($this_txt, $unpw) {
+    global $message;
+    $a = 0;
+    //echo $this_txt;
+    $save_codes = array();
+    for ($y = 0; $y < strlen($this_txt); $y++) {
+        $my_chr = substr($this_txt, $y, 1);
+        if ($temp = check_invalid_characters(ord($my_chr))) {
+            continue;
+        }
+        $codes = new Codes();
+        $codes->gen_salt(12);
+        $codes->codes_id = get_new_id();
+        $codes->unpw_id = $unpw->unpw_id;
+        $weight = get_random_value(2, 9);
+        $x_value = get_random_number();
+        //$y_value = get_random_number();
+        $codes->multiplier = strrev(dechex($weight * $x_value));
+        $str_value = Yekym::generate_code($x_value, $my_chr);
+        
+        $codes->codex = strrev(dechex($weight * ord($str_value)));
+        $codes->weight = strrev(dechex($weight));
+        $codes->code_order = $a;
+        $a++;
+        $save_codes[] = $codes->save();
+    }
+    $count_saved = true;
+    for ($y = 0; $y < count($save_codes); $y++) {
+        if ($save_codes[$y] == 0) {
+            $count_saved = false;
+         }
+    }
+    if ($count_saved) {
+        $message .= "All characters have been encrypted!<br>";
+    } else {
+        $message .= "Not all characters have been encrypted!<br>";
+    }
+}
 
 ?>
