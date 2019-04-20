@@ -1,7 +1,7 @@
 <?php
 class Summary extends Common {
     protected static $table_name = "summary";
-    protected static $db_fields = array('id', 'sum_id', 'user_id', 'descript', 'last_update', 'visible');
+    protected static $db_fields = array('id', 'sum_id', 'user_id', 'descript', 'last_update', 'visible', 'sorder');
     
     public $id;
     
@@ -15,10 +15,13 @@ class Summary extends Common {
     
     public $visible;
     
+    public $sorder;
+    
     public static function get_all_summary_by_user_id($id='') {
         if (has_presence($id)) {
             $sql  = "SELECT * FROM " . self::$table_name . " ";
             $sql .= "WHERE user_id = '{$id}' ";
+            $sql .= "ORDER BY sorder ";
             return self::find_by_sql($sql);
         }
         return false;
@@ -40,6 +43,7 @@ class Summary extends Common {
             $sql  = "SELECT * FROM " . self::$table_name . " ";
             $sql .= "WHERE user_id = '{$id}' ";
             $sql .= "AND visible ";
+            $sql .= "ORDER BY sorder";
             return self::find_by_sql($sql);
         }
         return false;

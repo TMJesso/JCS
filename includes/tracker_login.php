@@ -172,7 +172,7 @@ class UnPw extends Common {
 
 class Codes extends Common {
     protected static $table_name = "login_codes";
-    protected static $db_fields = array('id', 'codes_id', 'unpw_id', 'multiplier', 'codex', 'weight', 'slt', 'code_order');
+    protected static $db_fields = array('id', 'codes_id', 'unpw_id', 'multiplier', 'codex', 'weight', 'slt', 'code_order', 'np');
     
     public $id;
     
@@ -208,6 +208,16 @@ class Codes extends Common {
     public $slt;
     
     public $code_order;
+    
+    /** np (New Password)
+     * 
+     * Generating new paswsword and if this is true
+     * then use the new function to decode it
+     * 
+     * @var Boolean
+     * 
+     */
+    public $np;
     
     public static function get_codes_by_id($id='') {
         $sql  = "SELECT * FROM " . self::$table_name . " ";
@@ -275,7 +285,7 @@ class Codes extends Common {
 
 class CodeB extends Common {
     protected static $table_name = "codes_back";
-    protected static $db_fields = array('id', 'codes_id', 'unpw_id', 'multiplier', 'codex', 'weight', 'slt', 'code_order');
+    protected static $db_fields = array('id', 'codes_id', 'unpw_id', 'multiplier', 'codex', 'weight', 'slt', 'code_order', 'np');
     
     public $id;
     
@@ -312,6 +322,7 @@ class CodeB extends Common {
     
     public $code_order;
 
+    public $np;
 
     public static function get_all_codes_by_id($id) {
         $sql  = "SELECT * FROM " . self::$table_name . " ";

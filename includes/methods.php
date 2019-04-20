@@ -170,6 +170,8 @@ function password_check($password, $existing_hash) {
 /**
  * Filename must include path eg. TRACKER.$filename CANNOT be blank
  * 
+ * if using the param variables :
+ * 
  * $param1 must include first ? eg. ?id=
  * 
  * $param2 - $param4 must include additional & eg. &tid=
@@ -249,6 +251,35 @@ function get_pw($tracker) {
         }
     }
     return $pw;
+}
+
+function now() {
+    return date(now_format());
+}
+
+function now_format() {
+    //"m-d-Y H:i:s"
+    return "Y-m-d H:i:s";
+}
+
+function get_cancel_button($name='index.php', $value='Cancel') {
+    ?>
+    <a href="<?php echo $name; ?>" class="button"><?php echo $value; ?></a>
+    <?php 
+}
+
+
+function get_reset_button() {
+    ?>
+    <input type="reset" name="reset_addmenu" class="button" value="Reset">
+    <?php
+}
+
+
+function get_submit_button($name='submit_button', $label='Save') {
+    ?>
+    <input type="submit" name="<?php echo $name; ?>" id="<?php echo $name; ?>" class="button" value="<?php echo $label; ?>">
+    <?php 
 }
 
 ?>

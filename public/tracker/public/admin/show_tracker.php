@@ -1,6 +1,9 @@
 <?php
 require_once '../../../../includes/initialize.php';
 if (!$session->is_logged_in()) { $session->logout(); redirect_to(ADMIN_PATH.'login.php'); }
+$menu_type = Menu_Type::get_by_type("Tracker", 9);
+$subtitle = "JCS Password Tracker";
+
 $howmany = Login::howmany();
 $user = User::get_user_by_username($session->get_user_id());
 $first_load = true;

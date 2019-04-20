@@ -8,7 +8,7 @@ class Factory extends Common {
     
     private function db_open() {
         $this->db = new mysqli(DB_SERVER, DB_USER, DB_PASS, DB_NAME, DB_PORT, DB_SOCKET);
-        if ($this->db->connect_errno) {
+        if ($this->db->connect_errno) { 
             die ("Database connection failed: " . $this->db->connect_error . " (" . $this->db->connect_errno . ") ");
         }
      }
@@ -57,6 +57,7 @@ class Factory extends Common {
     }
     
 }
+
 $base = new Factory();
 
 

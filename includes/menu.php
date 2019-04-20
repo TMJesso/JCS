@@ -1,35 +1,50 @@
 <?php
-class Menu extends Common {
+
+class Menu extends Common
+{
+
     protected static $table_name = 'menu';
-    protected static $db_fields = array('id', 'm_id', 'type_id', 'name', 'm_url', 'm_order', 'visible', 'security', 'clearance');
-    
+
+    protected static $db_fields = array(
+        'id',
+        'm_id',
+        'type_id',
+        'name',
+        'm_url',
+        'm_order',
+        'visible',
+        'security',
+        'clearance'
+    );
+
     public $id;
-    
+
     public $m_id;
-    
+
     public $type_id;
-    
+
     public $name;
-    
+
     public $m_url;
-    
+
     public $m_order;
-    
+
     public $visible;
-    
+
     public $security;
-    
+
     public $clearance;
-    
+
     /**
      * find a single menu by its id
-     * 
+     *
      * @param string $id
      * @return object|boolean
      */
-    public static function get_menu_by_m_id($id='') {
+    public static function get_menu_by_m_id($id = '')
+    {
         if (self::validate_string($id)) {
-            $sql  = "SELECT * FROM " . self::$table_name . " ";
+            $sql = "SELECT * FROM " . self::$table_name . " ";
             $sql .= "WHERE m_id = '{$id}' ";
             $sql .= "LIMIT 1";
             $result = self::find_by_sql($sql);
@@ -38,47 +53,52 @@ class Menu extends Common {
             return false;
         }
     }
-    
-    public static function get_all_visible_menus($sec) {
-        $sql  = "SELECT * FROM " . self::$table_name . " ";
+
+    public static function get_all_visible_menus($sec)
+    {
+        $sql = "SELECT * FROM " . self::$table_name . " ";
         $sql .= "WHERE visible AND $sec >= security";
         $sql .= "ORDER BY m_order";
         $results = self::find_by_sql($sql);
         return self::confirm_all_results($results);
     }
-    
-    public static function get_all_menus_by_type_id($id='') {
+
+    public static function get_all_menus_by_type_id($id = '')
+    {
         if (empty($id)) {
             return false;
         }
-        $sql  = "SELECT * FROM " . self::$table_name . " ";
+        $sql = "SELECT * FROM " . self::$table_name . " ";
         $sql .= "WHERE type_id = '{$id}' ";
         $sql .= "ORDER BY m_order";
         return self::find_by_sql($sql);
     }
-    
-    public static function get_menu_by_find_text($ftext='') {
+
+    public static function get_menu_by_find_text($ftext = '')
+    {
         if (empty($ftext)) {
             return false;
         }
-        $sql  = "SELECT * FROM " . self::$table_name . " ";
+        $sql = "SELECT * FROM " . self::$table_name . " ";
         $sql .= "WHERE find_text = '{$ftext}' ";
         $sql .= "LIMIT 1";
         $result = self::find_by_sql($sql);
         return ($result) ? array_shift($result) : false;
     }
 
-    public static function generate_table_and_data() {
+    public static function generate_table_and_data()
+    {
         $obj = new self();
         if ($obj->create_table()) {
             $obj->load_data();
             return "Menu table was created and populated";
         }
     }
-    
-    private function create_table() {
+
+    private function create_table()
+    {
         global $base;
-        $sql  = "CREATE TABLE IF NOT EXISTS menu ( ";
+        $sql = "CREATE TABLE IF NOT EXISTS menu ( ";
         $sql .= "id int(11) NOT NULL AUTO_INCREMENT, ";
         $sql .= "m_id varbinary(12) NOT NULL, ";
         $sql .= "type_id varbinary(12) NOT NULL, ";
@@ -97,10 +117,11 @@ class Menu extends Common {
         $sql .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
         return $base->query($sql);
     }
-    
-    private function load_data() {
+
+    private function load_data()
+    {
         global $base;
-        $sql  = "INSERT IGNORE INTO menu (id, m_id, type_id, name, m_url, m_order, visible, security, clearance) VALUES ";
+        $sql = "INSERT IGNORE INTO menu (id, m_id, type_id, name, m_url, m_order, visible, security, clearance) VALUES ";
         $sql .= "(9, 0x32336a6c6c346c6b66717530, 0x373430675842353649354a56, 'Home', 'index.php', 0, 1, 9, 9), ";
         $sql .= "(15, 0x34323938766d30397667656d, 0x373430675842353649354a56, 'System', 'system.php', 6, 1, 0, 0), ";
         $sql .= "(35, 0x375a47353272596a314a6234, 0x373430675842353649354a56, 'CLAD', '/JCS/clad/public/admin/index.php', 3, 1, 0, 0), ";
@@ -118,7 +139,6 @@ class Menu extends Common {
         $sql .= "(13, 0x793576303433303932756330, 0x373430675842353649354a56, 'R&eacute;sum&eacute;', '/JCS/resume/public/index.php', 4, 1, 9, 0)";
         $base->query($sql);
     }
-
 }
 
 ?>

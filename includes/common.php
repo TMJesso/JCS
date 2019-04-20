@@ -1,7 +1,7 @@
 <?php
 require_once LIB_PATH . 'database.php';
 
-/** This is the Top class upon which all other database class are instantiated
+/** This is the Top class upon which all other database classes are instantiated
  * 
  * @author Theral Jessop
  * @copyright 2018 by Theral Jessop All Rights Reserved
